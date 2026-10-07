@@ -69,7 +69,7 @@ class CredentialStore:
             }
 
     def has_inference(self) -> bool:
-        """True when we can call W&B Inference (only the API key is strictly required)."""
+        """True when we can call Forge Inference (only the API key is strictly required)."""
         with self._lock:
             return bool(self._creds.wandb_api_key)
 

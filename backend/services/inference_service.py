@@ -16,7 +16,7 @@ from pydantic import BaseModel
 
 WANDB_INFERENCE_BASE_URL = "https://api.inference.wandb.ai/v1"
 
-# Vision-capable models on W&B Inference. Mapping is `model_id -> friendly label`
+# Vision-capable models on Forge Inference. Mapping is `model_id -> friendly label`
 # and is sent verbatim to the frontend so the credentials modal can render the
 # dropdown without hardcoding labels.
 AVAILABLE_MODELS: dict[str, str] = {
@@ -28,7 +28,7 @@ AVAILABLE_MODELS: dict[str, str] = {
 }
 DEFAULT_MODEL = "moonshotai/Kimi-K2.6"
 
-# W&B Inference rejects very large base64-encoded image payloads ("ext_proc failed").
+# Forge Inference rejects very large base64-encoded image payloads ("ext_proc failed").
 # Resize images so the longest edge is at most this many pixels before sending.
 MAX_IMAGE_DIMENSION = 1600
 

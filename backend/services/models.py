@@ -1,6 +1,6 @@
 """Weave Models for OCR, comparison, and prompt-injection guarding.
 
-Each model surface in Likho is a ``weave.Model`` subclass:
+Each model surface in Kateb is a ``weave.Model`` subclass:
 
 * :class:`OCRModel` — single-image -> markdown via a chosen vision model.
 * :class:`ComparisonModel` — fans out to two ``OCRModel`` instances in parallel.
@@ -226,7 +226,7 @@ class ComparisonModel(weave.Model):
                 return ComparisonResult(
                     model_id=model_id,
                     model_label=model_label,
-                    error=f"Could not reach W&B Inference: {e}",
+                    error=f"Could not reach Forge Inference: {e}",
                 )
             except Exception as e:
                 logger.error(f"[compare] {model_id} failed: {e}")
@@ -313,7 +313,7 @@ def get_guardrail_model() -> GuardrailModel:
     """Return a process-wide ``GuardrailModel``.
 
     The underlying ``llm_guard`` model loads weights on construction, so we keep
-    one instance per process and publish it to Weave on first use (so the Models
+    one instance per process and publish it to Forge Weave on first use (so the Models
     tab shows it even before the first trace).
 
     The lock is load-bearing: FastAPI resolves this dependency in its threadpool,
@@ -338,7 +338,7 @@ def get_guardrail_model() -> GuardrailModel:
 
 
 def _require_credentials() -> Any:
-    """Ensure we have what we need to call W&B Inference.
+    """Ensure we have what we need to call Forge Inference.
 
     The API key is always required. Entity + project are only required when
     Weave tracing is enabled (otherwise we never call ``weave.init`` and the
@@ -351,8 +351,8 @@ def _require_credentials() -> Any:
             detail={
                 "code": "wandb_not_configured",
                 "message": (
-                    "W&B API key is not set. Open the credentials modal to "
-                    "add your W&B API key."
+                    "Forge API key is not set. Open the credentials modal to "
+                    "add your Forge API key."
                 ),
             },
         )

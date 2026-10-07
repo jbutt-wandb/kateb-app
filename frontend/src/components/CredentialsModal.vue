@@ -39,7 +39,7 @@ async function handleSave() {
 
   const haveKey = !!wandbKey.value.trim() || !!status.value?.wandb_configured
   if (!haveKey) {
-    localError.value = 'W&B API key is required.'
+    localError.value = 'Forge API key is required.'
     return
   }
 
@@ -92,7 +92,7 @@ function handleCancel() {
     >
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
         <h2 style="font-size: 22px; font-weight: 700; color: var(--color-text-primary); margin: 0;">
-          {{ isFirstRun ? 'Welcome to Likho' : 'Credentials' }}
+          {{ isFirstRun ? 'Welcome to Kateb' : 'Credentials' }}
         </h2>
         <button
           v-if="!isFirstRun"
@@ -104,7 +104,7 @@ function handleCancel() {
         </button>
       </div>
       <p style="font-size: 14px; color: var(--color-text-muted); margin: 0 0 20px 0; line-height: 1.5;">
-        Likho uses W&amp;B Inference for OCR. Your W&amp;B API key authenticates the model call. Turn on Weave tracing to record every call to your W&amp;B project. Values are written to your local <code style="font-family: ui-monospace, monospace;">.env</code> file (gitignored).
+        Kateb uses Forge Inference for OCR. Your Forge API key authenticates the model call. Turn on Forge Weave tracing to record every call to your Forge project. Values are written to your local <code style="font-family: ui-monospace, monospace;">.env</code> file (gitignored).
       </p>
 
       <!-- Tracing toggle -->
@@ -115,10 +115,10 @@ function handleCancel() {
             v-model="tracingEnabled"
             style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--color-accent);"
           />
-          Enable Weave tracing
+          Enable Forge Weave tracing
         </label>
         <p style="font-size: 12px; color: var(--color-text-muted); margin: 6px 0 0 26px; line-height: 1.45;">
-          When off, OCR still works but no traces are sent to W&amp;B. Entity and project are only needed when this is on.
+          When off, OCR still works but no traces are sent to Forge. Entity and project are only needed when this is on.
         </p>
       </div>
 
@@ -147,10 +147,10 @@ function handleCancel() {
         </p>
       </div>
 
-      <!-- W&B section -->
+      <!-- Forge section -->
       <div>
         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--color-text-primary); margin-bottom: 6px;">
-          W&amp;B API Key <span style="color: #f87171;">*</span>
+          Forge API Key <span style="color: #f87171;">*</span>
           <span v-if="status?.wandb_configured" style="font-weight: 400; color: var(--color-text-muted); margin-left: 6px;">
             ({{ status.wandb_preview }} from {{ status.wandb_source }})
           </span>
@@ -179,7 +179,7 @@ function handleCancel() {
           </label>
           <input
             v-model="entity"
-            placeholder="your-wandb-entity"
+            placeholder="your-forge-entity"
             autocomplete="off"
             style="width: 100%; padding: 10px 12px; margin-bottom: 12px; font-size: 14px; background-color: var(--color-bg); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 6px; outline: none; box-sizing: border-box;"
           />
@@ -189,7 +189,7 @@ function handleCancel() {
           </label>
           <input
             v-model="project"
-            placeholder="likho"
+            placeholder="kateb"
             autocomplete="off"
             style="width: 100%; padding: 10px 12px; font-size: 14px; background-color: var(--color-bg); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 6px; outline: none; box-sizing: border-box;"
           />
@@ -201,7 +201,7 @@ function handleCancel() {
         {{ localError }}
       </div>
       <div v-else-if="configStore.lastWeaveWarning" style="margin-top: 16px; padding: 10px 12px; border-radius: 6px; font-size: 13px; background-color: rgba(245, 158, 11, 0.12); color: #fbbf24;">
-        Saved, but Weave init warning: {{ configStore.lastWeaveWarning }}
+        Saved, but Forge Weave init warning: {{ configStore.lastWeaveWarning }}
       </div>
 
       <!-- Footer buttons -->

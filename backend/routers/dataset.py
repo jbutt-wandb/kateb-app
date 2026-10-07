@@ -12,7 +12,7 @@ from backend.services.inference_service import resolve_model
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/dataset", tags=["Dataset"])
 
-DATASET_NAME = os.getenv("LIKHO_DATASET_NAME", "likho-ocr-captures")
+DATASET_NAME = os.getenv("KATEB_DATASET_NAME", "kateb-ocr-captures")
 
 
 class CaptureOptions(BaseModel):
@@ -36,7 +36,7 @@ class CaptureRequest(BaseModel):
 
 
 def _append_to_dataset(rows: list[dict]) -> None:
-    """Best-effort write to the Weave dataset. Never raises."""
+    """Best-effort write to the Forge Weave dataset. Never raises."""
     if not credential_store.has_weave():
         logger.info("[dataset] skip — weave not configured")
         return

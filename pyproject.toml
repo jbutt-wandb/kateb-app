@@ -1,5 +1,5 @@
 [project]
-name = "ocr-app"
+name = "kateb"
 version = "0.1.0"
 description = "OCR app to convert handwritten notes to markdown"
 readme = "README.md"

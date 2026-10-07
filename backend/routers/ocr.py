@@ -87,7 +87,7 @@ async def process_image(
 
     # weave.attributes(...): attaches per-call metadata that ISN'T a method
     # argument (e.g. route name, environment, request id, A/B flag). It
-    # propagates to all nested ops and is filterable in the Weave UI.
+    # propagates to all nested ops and is filterable in the Forge Weave UI.
     # Disabled for now — to re-enable, wrap the block below in:
     #     with weave.attributes({...}):
     # {
@@ -111,7 +111,7 @@ async def process_image(
         )
 
     try:
-        logger.info("Sending image to W&B Inference...")
+        logger.info("Sending image to Forge Inference...")
         image_base64 = base64.b64encode(image_bytes).decode("utf-8")
         markdown = await ocr_model.predict(
             image_base64,
@@ -125,22 +125,22 @@ async def process_image(
         return OCRResult(filename=image.filename or "image", markdown=markdown)
     except APIStatusError as e:
         msg = getattr(e, "message", None) or str(e)
-        logger.error(f"W&B Inference returned {e.status_code}: {msg}")
+        logger.error(f"Forge Inference returned {e.status_code}: {msg}")
         raise HTTPException(
             status_code=e.status_code,
             detail={"code": "inference_error", "message": msg},
         )
     except APITimeoutError as e:
-        logger.error(f"W&B Inference timeout: {e}")
+        logger.error(f"Forge Inference timeout: {e}")
         raise HTTPException(
             status_code=504,
-            detail={"code": "inference_timeout", "message": f"W&B Inference timed out: {e}"},
+            detail={"code": "inference_timeout", "message": f"Forge Inference timed out: {e}"},
         )
     except APIConnectionError as e:
-        logger.error(f"W&B Inference unreachable: {e}")
+        logger.error(f"Forge Inference unreachable: {e}")
         raise HTTPException(
             status_code=502,
-            detail={"code": "inference_unreachable", "message": f"Could not reach W&B Inference: {e}"},
+            detail={"code": "inference_unreachable", "message": f"Could not reach Forge Inference: {e}"},
         )
     except HTTPException:
         raise
@@ -167,7 +167,7 @@ async def compare_models(
     custom_instructions: Annotated[str, Form()] = "",
     guardrail: GuardrailModel = Depends(get_guardrail_model),
 ):
-    """Run exactly two selected W&B vision models on a single image in parallel."""
+    """Run exactly two selected Forge vision models on a single image in parallel."""
     unique_ids = list(dict.fromkeys(model_ids))
     if len(unique_ids) != 2:
         raise HTTPException(
@@ -201,8 +201,8 @@ async def compare_models(
             detail={
                 "code": "wandb_not_configured",
                 "message": (
-                    "W&B API key is not set. Open the credentials modal to "
-                    "add your W&B API key."
+                    "Forge API key is not set. Open the credentials modal to "
+                    "add your Forge API key."
                 ),
             },
         )
@@ -227,7 +227,7 @@ async def compare_models(
 
     # weave.attributes(...): per-call metadata that ISN'T a method argument
     # (route, environment, request id, A/B flag). Propagates to nested ops
-    # and is filterable in the Weave UI. See /process above for details.
+    # and is filterable in the Forge Weave UI. See /process above for details.
     # Disabled for now — re-enable by wrapping the block below in:
     #     with weave.attributes({...}):
     # {

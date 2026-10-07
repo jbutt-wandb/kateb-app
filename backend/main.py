@@ -10,7 +10,7 @@ from backend.services.credentials import store as credential_store
 credential_store.apply_tracing_setting()
 
 app = FastAPI(
-    title="OCR Notes API",
+    title="Kateb API",
     description="API for converting handwritten notes to markdown",
     version="1.0.0",
 )

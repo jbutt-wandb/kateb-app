@@ -49,7 +49,7 @@ function confirm() {
       </div>
 
       <p style="font-size: 14px; color: var(--color-text-muted); margin: 0 0 20px 0; line-height: 1.55;">
-        Also send a copy of this document to your Weave fine-tuning dataset? Embedded diagrams will be stripped from the dataset entry so the text stays clean for training.
+        Also send a copy of this document to your Forge Weave fine-tuning dataset? Embedded diagrams will be stripped from the dataset entry so the text stays clean for training.
       </p>
 
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
@@ -67,7 +67,7 @@ function confirm() {
         >
           <input type="radio" :value="true" v-model="sendToDataset" style="margin-top: 3px; accent-color: var(--color-accent);" />
           <span>
-            <span style="display: block; font-size: 14px; font-weight: 600; color: var(--color-text-primary);">Yes — also save to Weave dataset</span>
+            <span style="display: block; font-size: 14px; font-weight: 600; color: var(--color-text-primary);">Yes — also save to Forge Weave dataset</span>
             <span style="display: block; font-size: 13px; color: var(--color-text-muted); margin-top: 2px;">Helps improve the model. Image tags will be stripped from the captured text.</span>
           </span>
         </label>
@@ -87,7 +87,7 @@ function confirm() {
           <input type="radio" :value="false" v-model="sendToDataset" style="margin-top: 3px; accent-color: var(--color-accent);" />
           <span>
             <span style="display: block; font-size: 14px; font-weight: 600; color: var(--color-text-primary);">No — download locally only</span>
-            <span style="display: block; font-size: 13px; color: var(--color-text-muted); margin-top: 2px;">Nothing is sent to W&amp;B.</span>
+            <span style="display: block; font-size: 13px; color: var(--color-text-muted); margin-top: 2px;">Nothing is sent to Forge.</span>
           </span>
         </label>
       </div>

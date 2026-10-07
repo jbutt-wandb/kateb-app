@@ -39,8 +39,8 @@ onMounted(async () => {
     <header style="position: relative; z-index: 5;">
       <div style="padding: 28px 40px 20px; display: flex; align-items: flex-end; justify-content: space-between;">
         <div style="display: flex; align-items: flex-end; gap: 14px;">
-          <div style="font-family: 'EB Garamond', Georgia, serif; font-size: 32px; font-weight: 400; letter-spacing: 8px; color: #1a1a1a; line-height: 1;">LIKHO</div>
-          <div lang="ur" style="font-family: serif; font-size: 24px; color: #1a1a1a; direction: rtl; opacity: 0.55; line-height: 1; padding-bottom: 2px;">لکھو</div>
+          <div style="font-family: 'EB Garamond', Georgia, serif; font-size: 32px; font-weight: 400; letter-spacing: 8px; color: #1a1a1a; line-height: 1;">KATEB</div>
+          <div lang="ar" style="font-family: serif; font-size: 24px; color: #1a1a1a; direction: rtl; opacity: 0.55; line-height: 1; padding-bottom: 2px;">كاتب</div>
         </div>
         <div style="display: flex; align-items: center; gap: 16px;">
           <button
@@ -79,7 +79,7 @@ onMounted(async () => {
 
     <footer style="position: relative; z-index: 1; margin: 0 40px; padding-bottom: 32px;">
       <div style="height: 0.5px; background: #1a1a1a; opacity: 0.12;"></div>
-      <div style="margin-top: 8px; font-size: 11px; font-style: italic; color: #bbb;">¹ Likho (لکھو) — to write.</div>
+      <div style="margin-top: 8px; font-size: 11px; font-style: italic; color: #bbb;">¹ Kateb (كاتب) — the writer.</div>
     </footer>
 
     <CredentialsModal />

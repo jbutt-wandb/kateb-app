@@ -184,11 +184,11 @@ function backToUpload() {
         </h2>
         <p style="font-size: 14px; color: var(--color-text-muted); line-height: 1.55; margin: 0 0 18px 0;">
           We'll call both selected models on this image in parallel. Expect roughly
-          2× the W&amp;B Inference cost and wall-clock latency of a normal OCR run.
+          2× the Forge Inference cost and wall-clock latency of a normal OCR run.
         </p>
 
         <div v-if="availableEntries.length === 0" style="padding: 12px; border-radius: 8px; font-size: 14px; background-color: rgba(239, 68, 68, 0.1); color: #f87171; margin-bottom: 18px;">
-          No available models found. Make sure your W&amp;B credentials are configured.
+          No available models found. Make sure your Forge credentials are configured.
         </div>
 
         <div v-else style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">

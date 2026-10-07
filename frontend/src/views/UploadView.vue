@@ -243,7 +243,7 @@ function toggleOpt(key, storeKey) {
       <!-- Action row -->
       <div style="display: flex; flex-direction: column; gap: 8px;">
         <button
-          class="btn-likho-primary"
+          class="btn-kateb-primary"
           @click="handleSubmit"
           :disabled="notesStore.isProcessing || !configStore.inferenceReady"
         >
@@ -251,10 +251,10 @@ function toggleOpt(key, storeKey) {
           Convert to markdown
         </button>
         <button
-          class="btn-likho-ghost"
+          class="btn-kateb-ghost"
           @click="handleCompareClick"
           :disabled="!configStore.inferenceReady"
-          :title="!configStore.inferenceReady ? 'Configure W&B credentials first' : 'Pick two models and compare their OCR on a single image'"
+          :title="!configStore.inferenceReady ? 'Configure Forge credentials first' : 'Pick two models and compare their OCR on a single image'"
           style="justify-content: center;"
         >
           <i class="ti ti-scale" aria-hidden="true"></i>
@@ -264,7 +264,7 @@ function toggleOpt(key, storeKey) {
 
       <!-- Credential hint -->
       <div v-if="!configStore.inferenceReady" style="margin-top: 10px; font-size: 13px; font-style: italic; color: #bbb;">
-        Add your W&amp;B API key via the
+        Add your Forge API key via the
         <button
           type="button"
           @click="configStore.openModal('edit')"

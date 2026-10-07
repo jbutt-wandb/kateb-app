@@ -54,7 +54,7 @@
 .bracket-wrap svg.corner.br { bottom: -1px; right: -1px; }
 
 /* Buttons */
-.btn-likho-primary {
+.btn-kateb-primary {
   font-family: var(--font-serif);
   font-size: 17px;
   font-weight: 400;
@@ -71,11 +71,11 @@
   transition: opacity 0.15s;
   letter-spacing: 0.01em;
 }
-.btn-likho-primary:hover:not(:disabled) { opacity: 0.82; }
-.btn-likho-primary:active:not(:disabled) { opacity: 0.7; }
-.btn-likho-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-kateb-primary:hover:not(:disabled) { opacity: 0.82; }
+.btn-kateb-primary:active:not(:disabled) { opacity: 0.7; }
+.btn-kateb-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.btn-likho-ghost {
+.btn-kateb-ghost {
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 300;
@@ -90,8 +90,8 @@
   gap: 7px;
   transition: border-color 0.15s, color 0.15s;
 }
-.btn-likho-ghost:hover:not(:disabled) { border-color: #666; color: #333; }
-.btn-likho-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-kateb-ghost:hover:not(:disabled) { border-color: #666; color: #333; }
+.btn-kateb-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* Opt card */
 .opt-card {

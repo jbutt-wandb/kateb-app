@@ -2,7 +2,7 @@
 
 All Agents SDK constructs live here so ``backend.services.models`` only deals
 with ``Runner.run``. The agent is a single-shot (``max_turns=1``) vision call
-against W&B Inference — behavior parity with the previous direct
+against Forge Inference — behavior parity with the previous direct
 ``chat.completions.create`` call.
 """
 from __future__ import annotations
@@ -62,7 +62,7 @@ def build_ocr_agent(
     model_id: str, client: AsyncOpenAI, max_output_tokens: int
 ) -> Agent:
     return Agent(
-        name="likho-ocr",
+        name="kateb-ocr",
         # The full OCR prompt travels in the user message (see ocr_input) —
         # same role/content as the pre-agents request payload.
         instructions=None,
