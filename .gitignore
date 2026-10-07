@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Secrets / credentials
+.env
+.env.local
+.likho_config.json
+
+# Node
+node_modules/
+dist/
+
+# Editor / tooling
+.claude/
+.vscode/
+.idea/
+.DS_Store
+
+# Personal planning / scratch docs (not for the public repo)
+CLAUDE.md
+EXPLAINER.md
+PROGRESS.md
+IMPLEMENTATION_PLAN.md
+user_requirements.md
+weave_requirements.md
+chat_feature_requirements.md
