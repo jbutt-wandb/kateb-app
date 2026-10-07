@@ -123,6 +123,12 @@ class CredentialStore:
             weave.init(f"{c.weave_entity}/{c.weave_project}")
             with self._lock:
                 self._weave_initialized_for = target
+            # Late import: keeps the startup import graph unchanged. Publishes
+            # the local prompt blocks and adopts the latest Weave versions;
+            # swallows its own per-asset errors.
+            from backend.prompts.ocr_prompts import sync_prompts
+
+            sync_prompts()
             return None
         except Exception as e:
             logger.warning(f"Weave init failed: {e}")

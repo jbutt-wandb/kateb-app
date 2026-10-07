@@ -31,6 +31,7 @@ Built with Vue 3 + FastAPI, powered by [Forge Inference](https://docs.coreweave.
 
 ```bash
 # Terminal 1 — backend
+# Ensure venv is activated
 uv sync
 uv run uvicorn backend.main:app --reload --port 8000
 
@@ -74,6 +75,8 @@ Pick whichever fits your page. Switch any time from the gear icon.
 All three are served by Forge Inference — see the [model catalog](https://docs.coreweave.com/products/inference/serverless) for the latest list.
 
 ## How it works
+
+> **Want the full picture?** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) is a concise engineer's tour of the app — a workflow diagram of the request pipeline plus `file:line` pointers to where each feature lives.
 
 Kateb calls Forge Inference's [OpenAI-compatible API](https://docs.coreweave.com/products/inference/serverless/api-reference) using the `openai` Python SDK. Images are downscaled to ≤1600px before sending (the API rejects very large base64 payloads), and structured output is enforced via `response_format={"type":"json_schema", ...}` so the model returns clean Markdown instead of prose-with-code-fences. Every OCR call is wrapped with `@weave.op`, so you'll find a full trace at `https://forge.coreweave.com/wandb/<entity>/<project>/weave` after each run.
 

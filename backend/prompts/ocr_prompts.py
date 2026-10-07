@@ -1,3 +1,10 @@
+import logging
+import threading
+
+import weave
+
+logger = logging.getLogger(__name__)
+
 SYSTEM_PROMPT = """You are an expert OCR assistant specializing in converting handwritten notes to clean, well-formatted Markdown. Your task is to:
 
 1. Accurately transcribe all handwritten text
@@ -55,6 +62,61 @@ OUTPUT_INSTRUCTIONS = """OUTPUT FORMAT:
 - Output raw markdown text only"""
 
 
+# ---------------------------------------------------------------------------
+# Weave prompt assets — each block above is published as a versioned
+# weave.StringPrompt and the latest version is adopted at runtime.
+# ---------------------------------------------------------------------------
+
+# Weave object name -> local fallback content
+PROMPT_ASSETS: dict[str, str] = {
+    "ocr-system-prompt": SYSTEM_PROMPT,
+    "ocr-latex-instructions": LATEX_INSTRUCTIONS,
+    "ocr-diagram-instructions": DIAGRAM_INSTRUCTIONS,
+    "ocr-output-instructions": OUTPUT_INSTRUCTIONS,
+}
+
+_prompts_lock = threading.Lock()
+_active_prompts: dict[str, str] = dict(PROMPT_ASSETS)  # name -> content in use
+_prompt_refs: dict[str, str] = {}  # name -> weave ref URI of the adopted version
+
+
+def sync_prompts() -> None:
+    """Publish the local prompt blocks and adopt the latest Weave versions.
+
+    Must run after a successful ``weave.init`` (called from
+    ``CredentialStore.try_init_weave``). ``weave.publish`` is content-addressed,
+    so unchanged content never creates a new version; an edited local constant
+    becomes ``:latest``, while an edit made in the Weave UI stays ``:latest``
+    (the local publish no-ops against its existing digest) and is fetched here.
+
+    Never call ``StringPrompt.format()`` on these blocks — the LaTeX/diagram
+    examples contain literal braces that ``str.format`` would choke on; read
+    ``.content`` instead. Any failure is non-fatal: the cache keeps the local
+    constants / last-good values.
+    """
+    for name, local_content in PROMPT_ASSETS.items():
+        try:
+            ref = weave.publish(weave.StringPrompt(local_content), name=name)
+            fetched = weave.ref(name).get()  # :latest — may be a UI edit
+            content = getattr(fetched, "content", None)
+            with _prompts_lock:
+                if content:
+                    _active_prompts[name] = content
+                _prompt_refs[name] = str(getattr(fetched, "ref", None) or ref.uri())
+        except Exception as exc:
+            logger.warning("[prompts] sync failed for %s (using fallback): %s", name, exc)
+
+
+def get_prompt(name: str) -> str:
+    with _prompts_lock:
+        return _active_prompts[name]
+
+
+def get_prompt_refs() -> dict[str, str]:
+    with _prompts_lock:
+        return dict(_prompt_refs)
+
+
 def build_ocr_prompt(
     contains_latex: bool,
     contains_diagrams: bool,
@@ -67,15 +129,15 @@ def build_ocr_prompt(
     - Variable content (custom instructions) comes LAST
     """
     # Static parts FIRST for cache prefix optimization
-    prompt_parts = [SYSTEM_PROMPT]
+    prompt_parts = [get_prompt("ocr-system-prompt")]
 
     if contains_latex:
-        prompt_parts.append(LATEX_INSTRUCTIONS)
+        prompt_parts.append(get_prompt("ocr-latex-instructions"))
 
     if contains_diagrams:
-        prompt_parts.append(DIAGRAM_INSTRUCTIONS)
+        prompt_parts.append(get_prompt("ocr-diagram-instructions"))
 
-    prompt_parts.append(OUTPUT_INSTRUCTIONS)
+    prompt_parts.append(get_prompt("ocr-output-instructions"))
 
     # Variable parts LAST (after cacheable prefix)
     if custom_instructions and custom_instructions.strip():

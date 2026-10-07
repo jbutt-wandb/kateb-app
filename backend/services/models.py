@@ -32,8 +32,9 @@ from openai import (
     AsyncOpenAI,
 )
 from pydantic import BaseModel, PrivateAttr
+from weave.trace.context.weave_client_context import get_weave_client
 
-from backend.prompts.ocr_prompts import build_ocr_prompt
+from backend.prompts.ocr_prompts import build_ocr_prompt, get_prompt_refs
 from backend.services.agent_runtime import Runner, build_ocr_agent, ocr_input
 from backend.services.credentials import store as credential_store
 from backend.services.inference_service import (
@@ -112,6 +113,9 @@ class OCRModel(weave.Model):
     model_id: str
     max_image_dimension: int = MAX_IMAGE_DIMENSION
     max_output_tokens: int = MAX_OUTPUT_TOKENS
+    # Weave ref URIs of the prompt-block versions in use; being a public field,
+    # a prompt version change bumps this Model's version in the Weave UI.
+    prompt_refs: dict[str, str] = {}
 
     _client: Optional[AsyncOpenAI] = PrivateAttr(default=None)
 
@@ -274,13 +278,38 @@ class GuardrailModel(weave.Model):
 # ---------------------------------------------------------------------------
 
 
+# The trace postprocessors strip ``self``, so traced calls never save the
+# Model object — publish it explicitly (like guardrail-model) so the Models
+# tab shows each (model_id, prompt versions) combination. Content-addressed,
+# but cache the key anyway to avoid a network round-trip per request.
+_published_ocr_models: set[tuple] = set()
+_publish_ocr_lock = threading.Lock()
+
+
+def _maybe_publish_ocr_model(model: OCRModel) -> None:
+    if get_weave_client() is None:  # tracing off — nothing to publish to
+        return
+    key = (model.model_id, tuple(sorted(model.prompt_refs.items())))
+    with _publish_ocr_lock:
+        if key in _published_ocr_models:
+            return
+    try:
+        weave.publish(model, name="ocr-model")
+    except Exception as exc:
+        logger.warning("weave.publish failed for ocr-model: %s", exc)
+        return
+    with _publish_ocr_lock:
+        _published_ocr_models.add(key)
+
+
 def build_ocr_model(
     api_key: str,
     entity: Optional[str],
     project: Optional[str],
     model_id: Optional[str],
 ) -> OCRModel:
-    model = OCRModel(model_id=resolve_model(model_id))
+    model = OCRModel(model_id=resolve_model(model_id), prompt_refs=get_prompt_refs())
+    _maybe_publish_ocr_model(model)
     kwargs: dict[str, Any] = {
         "base_url": WANDB_INFERENCE_BASE_URL,
         "api_key": api_key,
