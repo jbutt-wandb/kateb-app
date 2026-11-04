@@ -143,7 +143,7 @@ function handleCancel() {
           </option>
         </select>
         <p style="font-size: 12px; color: var(--color-text-muted); margin: 6px 0 0 0;">
-          Kimi and GLM Flash are fastest. Gemma and Qwen may be more accurate on dense pages.
+          The list reflects the vision models currently served by Forge Inference. Try the Compare view to find the best fit for your handwriting.
         </p>
       </div>
 

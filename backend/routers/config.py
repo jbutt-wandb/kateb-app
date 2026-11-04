@@ -7,7 +7,6 @@ from pydantic import BaseModel
 from backend.services.credentials import store
 from backend.services.inference_service import (
     AVAILABLE_MODELS,
-    DEFAULT_MODEL,
     resolve_model,
 )
 

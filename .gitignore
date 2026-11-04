@@ -28,6 +28,9 @@ dist/
 docs/screenshots/make_sample_note.py
 frontend/public/sample_note.jpg
 
+# Generated PR body from scripts/update_model_catalog.py (CI artifact)
+catalog_pr_body.md
+
 # Personal planning / scratch docs (not for the public repo)
 CLAUDE.md
 EXPLAINER.md
