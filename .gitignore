@@ -24,6 +24,10 @@ dist/
 .idea/
 .DS_Store
 
+# Screenshot-capture helpers (local only, regenerate with make_sample_note.py)
+docs/screenshots/make_sample_note.py
+frontend/public/sample_note.jpg
+
 # Personal planning / scratch docs (not for the public repo)
 CLAUDE.md
 EXPLAINER.md
