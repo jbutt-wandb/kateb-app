@@ -18,7 +18,7 @@ Built with Vue 3 + FastAPI, powered by [Forge Inference](https://docs.coreweave.
 - **Compare any two of the available vision models on a single image** — pick the pair from a modal, see both OCR outputs side-by-side in a tripartite layout (image + two panes), click the image for a full-screen lightbox, then promote either model to active and continue editing — `/compare` route
 - **Opt-in Forge Weave tracing** — toggle from the gear icon. When on, every OCR / comparison / prompt-injection call is traced as a versioned `weave.Model` in your Forge project, and downloads can capture per-image rows to a Forge Weave Dataset. When off (the default), Kateb works as a pure local OCR tool with no Forge traffic beyond the inference call itself
 - **Opt-in dataset capture on download** — when tracing is on, a small modal asks whether to also send the page rows to your Forge Weave Dataset (`kateb-ocr-captures`). Yes → per-image `(image, edited_markdown, original_ocr)` rows ship in the background, with all markdown image tags stripped from the text so the dataset stays clean for fine-tuning. No → local download only, zero network calls
-- Pick your vision model from the gear icon — Kimi (default, fastest), Gemma, or Qwen
+- Pick your vision model from the gear icon — the list tracks the Forge inference catalog automatically (Kimi K2.6 is the default)
 - First-run credentials modal — no manual `.env` editing required
 
 ## Prerequisites
@@ -62,17 +62,24 @@ Prefer to set things up by hand? Copy `.env.example` to `.env` and fill it in.
 
 ## Vision models
 
-Pick whichever fits your page. Switch any time from the gear icon.
+Pick whichever fits your page. Switch any time from the gear icon, or use the Compare view to try two side by side.
 
-| Model | Notes |
+The model list is kept current automatically: a weekly CI job (`.github/workflows/update-models.yml`) regenerates it from the public Forge inference catalog — keeping every model with image input, general availability, prod hosting, and structured-output support, and dropping anything retired — and opens a PR with the changes (`scripts/update_model_catalog.py`). The list at the time of writing:
+
+| Model | Label |
 | --- | --- |
-| `moonshotai/Kimi-K2.6` *(default)* | Fast, general-purpose. Great on clean, well-lit pages. |
-| `zai-org/GLM-5.3-Flash` | Lightweight flash tier — quickest option for simple pages. |
-| `google/gemma-4-31B-it` | More careful on dense or messy handwriting; slower. |
-| `Qwen/Qwen3.8-27B` | Dense multimodal model; strong on structured layouts (tables, multi-column). |
-| `MiniMaxAI/MiniMax-M3` | General multimodal MoE — a different family worth comparing. |
+| `moonshotai/Kimi-K2.6` *(default)* | Moonshot AI Kimi K2.6 |
+| `MiniMaxAI/MiniMax-M3` | MiniMax M3 |
+| `Qwen/Qwen3.6-35B-A3B` | Qwen3.6 35B A3B |
+| `Qwen/Qwen3.8-27B` | Qwen3.8 27B |
+| `deepseek-ai/DeepSeek-V4.1-Flash` | DeepSeek V4.1-Flash |
+| `google/gemma-4-26B-A4B-it` | Google Gemma 4 26B A4B Instruct |
+| `google/gemma-4-31B-it` | Google Gemma 4 31B |
+| `moonshotai/Kimi-K2.7-Code` | Moonshot AI Kimi K2.7 Code |
+| `nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B` | NVIDIA Nemotron 3.5 Super VL |
+| `zai-org/GLM-5.3-Flash` | Z.AI GLM 5.3 Flash |
 
-All three are served by Forge Inference — see the [model catalog](https://docs.coreweave.com/products/inference/serverless) for the latest list.
+All are served by Forge Inference — see the [model catalog](https://docs.coreweave.com/products/inference/serverless) for details on each.
 
 ## How it works
 
@@ -86,7 +93,7 @@ A single Forge API key powers four integrations. **Forge Inference always runs; 
 
 ### 1. Forge Inference — the model serving the OCR (always on)
 
-The vision LLM call goes to `https://api.inference.wandb.ai/v1` via the standard `openai` Python SDK with `base_url` overridden. No OpenAI account needed; the Forge key authenticates everything. Five vision models are exposed (Kimi K2.6, GLM 5.3 Flash, Gemma 4 31B, Qwen 3.8 27B, MiniMax M3) and selected at runtime from the credentials modal.
+The vision LLM call goes to `https://api.inference.wandb.ai/v1` via the standard `openai` Python SDK with `base_url` overridden. No OpenAI account needed; the Forge key authenticates everything. All vision-capable catalog models are exposed (ten at the time of writing — see [Vision models](#vision-models)) and selected at runtime from the credentials modal.
 
 → Code: `backend/services/models.py` — `OCRModel(weave.Model)` builds an `AsyncOpenAI` client in its `PrivateAttr` and calls Forge Inference inside `@weave.op async def predict(...)`. The client construction and the OCR helpers live in `backend/services/inference_service.py` (`build_ocr_model`, `OCR_RESPONSE_FORMAT`, `maybe_downscale`, `clean_markdown`).
 → Docs: [Forge Inference](https://docs.coreweave.com/products/inference/serverless)

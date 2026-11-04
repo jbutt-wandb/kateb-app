@@ -1,0 +1,29 @@
+name: Update model catalog
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-models:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Regenerate AVAILABLE_MODELS from the inference catalog
+        run: python3 scripts/update_model_catalog.py
+
+      - name: Open or update the catalog PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/update-model-catalog
+          title: "chore: update vision model catalog"
+          commit-message: "chore: update vision model catalog from inference catalog"
+          body-path: catalog_pr_body.md
+          add-paths: backend/services/inference_service.py
+          delete-branch: true

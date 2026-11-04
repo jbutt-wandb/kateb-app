@@ -78,7 +78,8 @@ Version-linking: each `OCRModel` instance is published as the `ocr-model` object
 | HTTP routes | `backend/routers/ocr.py` (process :75, compare :162), `config.py` (status :75, save :82), `dataset.py` (capture :58) |
 | Models & tracing | `backend/services/models.py`, `backend/services/credentials.py` |
 | Prompts (versioned) | `backend/prompts/ocr_prompts.py` (blocks :8–:62, sync :83, builder :120) |
-| Inference plumbing | `backend/services/inference_service.py` (model catalog :22), `backend/services/agent_runtime.py` |
+| Inference plumbing | `backend/services/inference_service.py` (model registry :24), `backend/services/agent_runtime.py` |
+| Model registry upkeep | `scripts/update_model_catalog.py` regenerates `AVAILABLE_MODELS` from the public Forge inference catalog; `.github/workflows/update-models.yml` runs it weekly and opens a PR |
 | Frontend flow | `frontend/src/views/` (Upload → Editor → Compare), `frontend/src/services/api.js`, state in `frontend/src/stores/notes.js` |
 
 > Line numbers are anchors into the current codebase; if the code has moved, grep for the named function instead.
