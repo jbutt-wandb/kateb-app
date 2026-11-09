@@ -27,6 +27,7 @@ AVAILABLE_MODELS: dict[str, str] = {
     "Qwen/Qwen3.6-35B-A3B": "Qwen3.6 35B A3B",
     "Qwen/Qwen3.8-27B": "Qwen3.8 27B",
     "deepseek-ai/DeepSeek-V4.1-Flash": "DeepSeek V4.1-Flash",
+    "deepseek-ai/DeepSeek-V4.1-Flash-1017": "DeepSeek V4.1-Flash-1017",
     "google/gemma-4-26B-A4B-it": "Google Gemma 4 26B A4B Instruct",
     "google/gemma-4-31B-it": "Google Gemma 4 31B",
     "moonshotai/Kimi-K2.7-Code": "Moonshot AI Kimi K2.7 Code",
